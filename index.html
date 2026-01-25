@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#16213e">
+  <meta name="description" content="Professional cricket scoring application with ball-by-ball tracking">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Cricket Scorer">
+  
+  <title>Cricket Scorer</title>
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- App Container -->
+  <div id="app">
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+      <div class="loading-content">
+        <div class="loading-icon">🏏</div>
+        <h1>Cricket Scorer</h1>
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Install Prompt (hidden by default) -->
+  <div id="installPrompt" class="install-prompt hidden">
+    <div class="install-content">
+      <span class="install-icon">📱</span>
+      <div class="install-text">
+        <strong>Install Cricket Scorer</strong>
+        <p>Add to home screen for the best experience</p>
+      </div>
+      <button id="installBtn" class="btn btn-primary">Install</button>
+      <button id="dismissInstall" class="btn-dismiss">×</button>
+    </div>
+  </div>
+
+  <!-- Offline Indicator -->
+  <div id="offlineIndicator" class="offline-indicator hidden">
+    <span>📴 You're offline - Changes will sync when connected</span>
+  </div>
+
+  <!-- Main App Script -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
