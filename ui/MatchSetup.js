@@ -23,7 +23,10 @@ export class MatchSetup {
     container.innerHTML = `
       <div class="setup-wizard">
         <header class="setup-header">
-          <h1>🏏 Cricket Scorer</h1>
+          <div class="setup-header-top">
+            <button class="btn-home" id="homeBtn" title="Go to Home">🏠</button>
+            <h1>🏏 Cricket Scorer</h1>
+          </div>
           <div class="step-indicator">
             ${this.renderStepIndicator()}
           </div>
@@ -363,6 +366,16 @@ export class MatchSetup {
    */
   attachEventListeners() {
     console.log('Attaching event listeners for step', this.currentStep);
+    
+    // Home button
+    const homeBtn = document.getElementById('homeBtn');
+    if (homeBtn) {
+      homeBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to go back to home? Your progress will be lost.')) {
+          this.app.showHome();
+        }
+      });
+    }
     
     // Navigation
     const nextBtn = document.getElementById('nextBtn');

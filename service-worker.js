@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cricket-scorer-v1';
+const CACHE_NAME = 'cricket-scorer-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
