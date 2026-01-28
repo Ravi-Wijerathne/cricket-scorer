@@ -12,6 +12,7 @@ export class ScoringUI {
     this.isWicketMode = false;
     this.wicketType = null;
     this.showingBowlerSelect = false;
+    this.showingMenu = false;
   }
 
   /**
@@ -36,10 +37,12 @@ export class ScoringUI {
     container.innerHTML = `
       <div class="scoring-screen">
         ${this.renderHeader(state)}
-        ${this.renderScoreDisplay(state)}
-        ${this.renderBatsmenDisplay(state)}
-        ${this.renderBowlerDisplay(state)}
-        ${this.renderThisOver(state)}
+        <div class="scoring-info-panel">
+          ${this.renderScoreDisplay(state)}
+          ${this.renderBatsmenDisplay(state)}
+          ${this.renderBowlerDisplay(state)}
+          ${this.renderThisOver(state)}
+        </div>
         ${this.renderScoringPad()}
         ${this.renderFooter()}
       </div>
@@ -58,12 +61,26 @@ export class ScoringUI {
     return `
       <header class="scoring-header">
         <div class="match-info">
-          <span class="batting-team">${state.battingTeam}</span>
-          <span class="innings-num">Innings ${state.inningsNumber}</span>
+          <button class="btn-home" id="homeBtn" title="Go to Home">🏠</button>
+          <div class="match-info-text">
+            <span class="batting-team">${state.battingTeam}</span>
+            <span class="innings-num">Innings ${state.inningsNumber}</span>
+          </div>
         </div>
         <div class="header-actions">
           <button class="btn-icon" id="undoBtn" title="Undo">↶</button>
-          <button class="btn-icon" id="menuBtn" title="Menu">☰</button>
+          <div class="menu-container">
+            <button class="btn-icon" id="menuBtn" title="Menu">☰</button>
+            ${this.showingMenu ? `
+              <div class="dropdown-menu">
+                <button class="dropdown-item" id="menuScorecard">📊 View Scorecard</button>
+                <button class="dropdown-item" id="menuSwapStrike">🔄 Swap Strike</button>
+                <button class="dropdown-item" id="menuChangeBowler">🎳 Change Bowler</button>
+                <button class="dropdown-item" id="menuEndInnings">🏁 End Innings</button>
+                <button class="dropdown-item" id="menuRetireBatsman">🚶 Retire Batsman</button>
+              </div>
+            ` : ''}
+          </div>
         </div>
       </header>
     `;
@@ -351,6 +368,16 @@ export class ScoringUI {
    * Attach event listeners
    */
   attachEventListeners() {
+    // Home button
+    const homeBtn = document.getElementById('homeBtn');
+    if (homeBtn) {
+      homeBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to go back to home? Your match progress is saved.')) {
+          this.app.showHome();
+        }
+      });
+    }
+
     // Run buttons
     document.querySelectorAll('.btn-runs').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -382,6 +409,29 @@ export class ScoringUI {
       undoBtn.addEventListener('click', () => this.undo());
     }
 
+    // Menu button
+    const menuBtn = document.getElementById('menuBtn');
+    if (menuBtn) {
+      menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.showingMenu = !this.showingMenu;
+        this.render();
+      });
+    }
+
+    // Menu dropdown items
+    if (this.showingMenu) {
+      this.attachMenuListeners();
+    }
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (this.showingMenu && !e.target.closest('.menu-container')) {
+        this.showingMenu = false;
+        this.render();
+      }
+    }, { once: true });
+
     // Swap strike button
     const swapStrikeBtn = document.getElementById('swapStrikeBtn');
     if (swapStrikeBtn) {
@@ -408,6 +458,52 @@ export class ScoringUI {
     // Bowler select modal events
     if (this.showingBowlerSelect) {
       this.attachBowlerSelectListeners();
+    }
+  }
+
+  /**
+   * Attach menu dropdown listeners
+   */
+  attachMenuListeners() {
+    const menuScorecard = document.getElementById('menuScorecard');
+    if (menuScorecard) {
+      menuScorecard.addEventListener('click', () => {
+        this.showingMenu = false;
+        this.app.showScorecard();
+      });
+    }
+
+    const menuSwapStrike = document.getElementById('menuSwapStrike');
+    if (menuSwapStrike) {
+      menuSwapStrike.addEventListener('click', () => {
+        this.showingMenu = false;
+        this.swapStrike();
+      });
+    }
+
+    const menuChangeBowler = document.getElementById('menuChangeBowler');
+    if (menuChangeBowler) {
+      menuChangeBowler.addEventListener('click', () => {
+        this.showingMenu = false;
+        this.showingBowlerSelect = true;
+        this.render();
+      });
+    }
+
+    const menuEndInnings = document.getElementById('menuEndInnings');
+    if (menuEndInnings) {
+      menuEndInnings.addEventListener('click', () => {
+        this.showingMenu = false;
+        this.endInnings();
+      });
+    }
+
+    const menuRetireBatsman = document.getElementById('menuRetireBatsman');
+    if (menuRetireBatsman) {
+      menuRetireBatsman.addEventListener('click', () => {
+        this.showingMenu = false;
+        this.retireBatsman();
+      });
     }
   }
 
@@ -653,6 +749,47 @@ export class ScoringUI {
       innings.swapStrike();
       this.render();
     }
+  }
+
+  /**
+   * Retire current batsman
+   */
+  retireBatsman() {
+    const innings = this.app.match.getCurrentInnings();
+    if (!innings) return;
+
+    const striker = innings.getStriker();
+    if (!striker) {
+      alert('No batsman on strike');
+      return;
+    }
+
+    if (!confirm(`Retire ${striker.name}?`)) {
+      return;
+    }
+
+    // Mark batsman as retired
+    striker.isOut = true;
+    striker.dismissalType = 'retired';
+    
+    // Bring in new batsman if available
+    const battingTeam = this.app.match.getTeam(innings.battingTeamId);
+    const nextBatsman = battingTeam.players.find(p => 
+      !innings.batsmen.includes(p.id) && 
+      !innings.outBatsmen?.includes(p.id)
+    );
+
+    if (nextBatsman) {
+      innings.strikerId = nextBatsman.id;
+      innings.batsmen.push(nextBatsman.id);
+    } else {
+      alert('No more batsmen available');
+      innings.strikerId = innings.nonStrikerId;
+      innings.nonStrikerId = null;
+    }
+
+    this.app.storageService.saveMatch(this.app.match);
+    this.render();
   }
 
   /**

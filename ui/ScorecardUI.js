@@ -44,7 +44,10 @@ export class ScorecardUI {
     
     return `
       <header class="scorecard-header">
-        <button class="btn-back" id="backBtn">← Back</button>
+        <div class="header-left">
+          <button class="btn-home" id="homeBtn" title="Go to Home">🏠</button>
+          <button class="btn-back" id="backBtn">← Back</button>
+        </div>
         <div class="match-title">
           <h1>${match.matchName || 'Match Scorecard'}</h1>
           <p class="venue">${match.venue} • ${match.date}</p>
@@ -365,6 +368,12 @@ export class ScorecardUI {
    * Attach event listeners
    */
   attachEventListeners() {
+    // Home button
+    const homeBtn = document.getElementById('homeBtn');
+    if (homeBtn) {
+      homeBtn.addEventListener('click', () => this.app.showHome());
+    }
+
     // Back button
     const backBtn = document.getElementById('backBtn');
     if (backBtn) {
