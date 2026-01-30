@@ -323,6 +323,7 @@ class CricketScorerApp {
               <span>${match.teams?.[1]?.shortName || 'Team B'}: ${match.innings[1].totalRuns}/${match.innings[1].wicketsFallen}</span>
             ` : ''}
           </div>
+          <button class="btn-delete-match" title="Delete match">🗑️</button>
         </div>
       `).join('');
 
@@ -330,6 +331,13 @@ class CricketScorerApp {
       container.querySelectorAll('.match-card').forEach(card => {
         card.addEventListener('click', () => {
           this.loadMatch(card.dataset.matchId);
+        });
+
+        // Add delete button handler
+        const deleteBtn = card.querySelector('.btn-delete-match');
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.deleteMatch(card.dataset.matchId);
         });
       });
     } catch (error) {
@@ -358,6 +366,32 @@ class CricketScorerApp {
     } catch (error) {
       console.error('Failed to load match:', error);
       alert('Failed to load match');
+    }
+  }
+
+  /**
+   * Delete a specific match
+   */
+  async deleteMatch(matchId) {
+    if (confirm('Are you sure you want to delete this match? This action cannot be undone.')) {
+      try {
+        await this.storageService.deleteMatch(matchId);
+        
+        // If deleted match is the current match, clear it
+        if (this.match && this.match.id === matchId) {
+          this.match = null;
+          this.rulesEngine = null;
+          this.scoringEngine = null;
+          this.statsEngine = null;
+          await this.storageService.setCurrentMatchId(null);
+        }
+        
+        // Re-render home to update the UI
+        this.renderHome();
+      } catch (error) {
+        console.error('Failed to delete match:', error);
+        alert('Failed to delete match');
+      }
     }
   }
 
@@ -478,6 +512,34 @@ class CricketScorerApp {
         margin-top: var(--spacing-sm);
         font-family: var(--font-mono);
         font-size: 0.9rem;
+      }
+      
+      .btn-delete-match {
+        position: absolute;
+        bottom: var(--spacing-md);
+        right: var(--spacing-md);
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-size: 1rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        opacity: 0;
+        transition: opacity 0.2s, transform 0.2s, background 0.2s;
+      }
+      
+      .match-card {
+        position: relative;
+      }
+      
+      .match-card:hover .btn-delete-match {
+        opacity: 1;
+      }
+      
+      .btn-delete-match:hover {
+        transform: scale(1.1);
+        background: var(--danger);
+        border-color: var(--danger);
       }
       
       .home-footer {
