@@ -1147,6 +1147,7 @@ input[type="color"] {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100%;
 }
 
 .scorecard-header {
@@ -1516,8 +1517,87 @@ input[type="color"] {
   }
   
   .scorecard-screen {
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0 var(--spacing-xl);
+  }
+
+  .scorecard-header {
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+
+  .innings-tabs {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin: var(--spacing-md) 0;
+  }
+
+  .score-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-xl);
+    text-align: left;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .team-score {
+    margin-bottom: 0;
+  }
+
+  .total-score {
+    font-size: 2.5rem;
+  }
+
+  .extras-summary,
+  .run-rate {
+    font-size: 0.95rem;
+  }
+
+  .content-tabs {
+    padding: 0 var(--spacing-md);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .content-tab {
+    font-size: 0.9rem;
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .batting-card,
+  .bowling-card,
+  .fow-card,
+  .partnerships-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .scorecard-table {
+    font-size: 0.95rem;
+  }
+
+  .scorecard-table th,
+  .scorecard-table td {
+    padding: var(--spacing-md);
+  }
+
+  .scorecard-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .yet-to-bat {
+    padding: var(--spacing-md) var(--spacing-xl);
+  }
+
+  .scorecard-footer {
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 
   /* Horizontal Scoring Layout */

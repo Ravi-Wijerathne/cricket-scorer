@@ -455,6 +455,7 @@ class CricketScorerApp {
       }
       
       .match-card {
+        position: relative;
         padding: var(--spacing-md);
         background: var(--bg-secondary);
         border-radius: var(--radius-md);
@@ -526,10 +527,6 @@ class CricketScorerApp {
         padding: var(--spacing-xs) var(--spacing-sm);
         opacity: 0;
         transition: opacity 0.2s, transform 0.2s, background 0.2s;
-      }
-      
-      .match-card {
-        position: relative;
       }
       
       .match-card:hover .btn-delete-match {

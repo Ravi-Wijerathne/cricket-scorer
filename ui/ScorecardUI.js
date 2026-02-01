@@ -345,9 +345,16 @@ export class ScorecardUI {
       <footer class="scorecard-footer">
         ${resultText ? `<div class="match-result">${resultText}</div>` : ''}
         <div class="footer-actions">
-          <button class="btn btn-primary" id="resumeScoringBtn">
-            Continue Scoring
-          </button>
+          ${!match.isComplete() ? `
+            <button class="btn btn-danger" id="endMatchBtn" style="background-color: #d9534f;">
+              End Match
+            </button>
+          ` : ''}
+          ${!match.isComplete() ? `
+            <button class="btn btn-primary" id="resumeScoringBtn">
+              Continue Scoring
+            </button>
+          ` : ''}
         </div>
       </footer>
     `;
@@ -396,6 +403,12 @@ export class ScorecardUI {
       });
     });
 
+    // End Match button
+    const endMatchBtn = document.getElementById('endMatchBtn');
+    if (endMatchBtn) {
+      endMatchBtn.addEventListener('click', () => this.endMatch());
+    }
+
     // Resume scoring button
     const resumeBtn = document.getElementById('resumeScoringBtn');
     if (resumeBtn) {
@@ -407,6 +420,24 @@ export class ScorecardUI {
     if (shareBtn) {
       shareBtn.addEventListener('click', () => this.shareScorecard());
     }
+  }
+
+  /**
+   * End match
+   */
+  endMatch() {
+    if (!confirm('Are you sure you want to END THE MATCH? This cannot be undone.')) {
+      return;
+    }
+
+    // End the match
+    this.app.match.endMatch();
+    
+    // Save the match
+    this.app.storageService.saveMatch(this.app.match);
+    
+    // Render to update the footer
+    this.render();
   }
 
   /**

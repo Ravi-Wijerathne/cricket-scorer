@@ -363,6 +363,60 @@ export class Match {
   }
 
   /**
+   * End match prematurely (can be called at any time)
+   */
+  endMatch() {
+    // Mark all ongoing innings as ended
+    if (this.innings.length > 0) {
+      const currentInnings = this.getCurrentInnings();
+      if (currentInnings && !currentInnings.isComplete()) {
+        currentInnings.end('ENDED');
+      }
+    }
+    
+    // Calculate result if we have at least one completed innings
+    if (this.innings.length >= 1) {
+      // Calculate result based on available innings
+      let result = new MatchResult();
+      
+      if (this.innings.length === 1) {
+        // Only first innings played - batting first team wins by default
+        const innings1 = this.innings[0];
+        result.winnerTeamId = innings1.battingTeamId;
+        result.resultType = 'no_result';
+        result.description = `${this.getTeam(result.winnerTeamId).name} - Match ended (1st innings only)`;
+      } else if (this.innings.length >= 2) {
+        // Both innings played - determine winner
+        const innings1 = this.innings[0];
+        const innings2 = this.innings[1];
+        
+        const score1 = innings1.totalRuns;
+        const score2 = innings2.totalRuns;
+        
+        if (score2 > score1) {
+          result.winnerTeamId = innings2.battingTeamId;
+          result.resultType = 'runs';
+          result.margin = score2 - score1;
+          result.description = `${this.getTeam(result.winnerTeamId).name} won by ${result.margin} runs`;
+        } else if (score1 > score2) {
+          result.winnerTeamId = innings1.battingTeamId;
+          result.resultType = 'runs';
+          result.margin = score1 - score2;
+          result.description = `${this.getTeam(result.winnerTeamId).name} won by ${result.margin} runs`;
+        } else {
+          result.resultType = 'tie';
+          result.description = 'Match ended - Tied';
+        }
+      }
+      
+      this.result = result;
+    }
+    
+    this.status = MatchStatus.COMPLETED;
+    this.updatedAt = Date.now();
+  }
+
+  /**
    * Get match summary
    */
   getSummary() {
