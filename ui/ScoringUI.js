@@ -77,6 +77,7 @@ export class ScoringUI {
                 <button class="dropdown-item" id="menuSwapStrike">🔄 Swap Strike</button>
                 <button class="dropdown-item" id="menuChangeBowler">🎳 Change Bowler</button>
                 <button class="dropdown-item" id="menuEndInnings">🏁 End Innings</button>
+                <button class="dropdown-item" id="menuEndMatch" style="color: #d9534f;">⏹️ End Match</button>
                 <button class="dropdown-item" id="menuRetireBatsman">🚶 Retire Batsman</button>
               </div>
             ` : ''}
@@ -498,6 +499,14 @@ export class ScoringUI {
       });
     }
 
+    const menuEndMatch = document.getElementById('menuEndMatch');
+    if (menuEndMatch) {
+      menuEndMatch.addEventListener('click', () => {
+        this.showingMenu = false;
+        this.endMatch();
+      });
+    }
+
     const menuRetireBatsman = document.getElementById('menuRetireBatsman');
     if (menuRetireBatsman) {
       menuRetireBatsman.addEventListener('click', () => {
@@ -829,6 +838,24 @@ export class ScoringUI {
       this.app.match.calculateResult();
       this.app.showScorecard();
     }
+  }
+
+  /**
+   * End match prematurely
+   */
+  endMatch() {
+    if (!confirm('Are you sure you want to END THE MATCH? This cannot be undone.')) {
+      return;
+    }
+
+    // End the match
+    this.app.match.endMatch();
+    
+    // Save the match
+    this.app.storageService.saveMatch(this.app.match);
+    
+    // Show the scorecard
+    this.app.showScorecard();
   }
 }
 
