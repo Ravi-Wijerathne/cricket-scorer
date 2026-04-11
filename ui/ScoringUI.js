@@ -52,6 +52,9 @@ export class ScoringUI {
     `;
 
     this.attachEventListeners();
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
   }
 
   /**
@@ -61,24 +64,24 @@ export class ScoringUI {
     return `
       <header class="scoring-header">
         <div class="match-info">
-          <button class="btn-home" id="homeBtn" title="Go to Home">🏠</button>
+          <button class="btn-home" id="homeBtn" title="Go to Home"><i data-lucide="home"></i></button>
           <div class="match-info-text">
             <span class="batting-team">${state.battingTeam}</span>
             <span class="innings-num">Innings ${state.inningsNumber}</span>
           </div>
         </div>
         <div class="header-actions">
-          <button class="btn-icon" id="undoBtn" title="Undo">↶</button>
+          <button class="btn-icon" id="undoBtn" title="Undo"><i data-lucide="undo-2"></i></button>
           <div class="menu-container">
-            <button class="btn-icon" id="menuBtn" title="Menu">☰</button>
+            <button class="btn-icon" id="menuBtn" title="Menu"><i data-lucide="menu"></i></button>
             ${this.showingMenu ? `
               <div class="dropdown-menu">
-                <button class="dropdown-item" id="menuScorecard">📊 View Scorecard</button>
-                <button class="dropdown-item" id="menuSwapStrike">🔄 Swap Strike</button>
-                <button class="dropdown-item" id="menuChangeBowler">🎳 Change Bowler</button>
-                <button class="dropdown-item" id="menuEndInnings">🏁 End Innings</button>
-                <button class="dropdown-item" id="menuEndMatch" style="color: #d9534f;">⏹️ End Match</button>
-                <button class="dropdown-item" id="menuRetireBatsman">🚶 Retire Batsman</button>
+                <button class="dropdown-item" id="menuScorecard"><i data-lucide="bar-chart-2" style="width:1rem;height:1rem;margin-right:8px;vertical-align:middle;"></i> View Scorecard</button>
+                <button class="dropdown-item" id="menuSwapStrike"><i data-lucide="refresh-cw" style="width:1rem;height:1rem;margin-right:8px;vertical-align:middle;"></i> Swap Strike</button>
+                <button class="dropdown-item" id="menuChangeBowler"><i data-lucide="user-switch" style="width:1rem;height:1rem;margin-right:8px;vertical-align:middle;"></i> Change Bowler</button>
+                <button class="dropdown-item" id="menuEndInnings"><i data-lucide="flag" style="width:1rem;height:1rem;margin-right:8px;vertical-align:middle;"></i> End Innings</button>
+                <button class="dropdown-item" id="menuEndMatch" style="color: var(--danger);"><i data-lucide="square" style="width:1rem;height:1rem;margin-right:8px;vertical-align:middle;"></i> End Match</button>
+                <button class="dropdown-item" id="menuRetireBatsman"><i data-lucide="user-minus" style="width:1rem;height:1rem;margin-right:8px;vertical-align:middle;"></i> Retire Batsman</button>
               </div>
             ` : ''}
           </div>
@@ -224,14 +227,14 @@ export class ScoringUI {
         <div class="wicket-row">
           <button class="btn-wicket ${this.isWicketMode ? 'active' : ''}" 
                   id="wicketBtn">
-            🔴 WICKET
+            <i data-lucide="target" style="width:1.2rem;height:1.2rem;margin-right:4px;"></i> WICKET
           </button>
         </div>
         
         <!-- Quick actions -->
         <div class="quick-actions">
-          <button class="btn-action" id="swapStrikeBtn">⇄ Swap Strike</button>
-          <button class="btn-action" id="retireBtn">Retire Hurt</button>
+          <button class="btn-action" id="swapStrikeBtn"><i data-lucide="arrow-left-right" style="width:1rem;height:1rem;margin-right:4px;vertical-align:middle;"></i> Swap</button>
+          <button class="btn-action" id="retireBtn"><i data-lucide="user-minus" style="width:1rem;height:1rem;margin-right:4px;vertical-align:middle;"></i> Retire</button>
         </div>
       </div>
     `;
@@ -243,9 +246,9 @@ export class ScoringUI {
   renderFooter() {
     return `
       <footer class="scoring-footer">
-        <button class="btn-nav" id="scorecardBtn">📊 Scorecard</button>
-        <button class="btn-nav" id="statsBtn">📈 Stats</button>
-        <button class="btn-nav" id="endInningsBtn">End Innings</button>
+        <button class="btn-nav" id="scorecardBtn"><i data-lucide="bar-chart-2" style="width:1rem;height:1rem;margin-right:4px;vertical-align:middle;"></i> Scorecard</button>
+        <button class="btn-nav" id="statsBtn"><i data-lucide="trending-up" style="width:1rem;height:1rem;margin-right:4px;vertical-align:middle;"></i> Stats</button>
+        <button class="btn-nav" id="endInningsBtn"><i data-lucide="flag" style="width:1rem;height:1rem;margin-right:4px;vertical-align:middle;"></i> End</button>
       </footer>
     `;
   }
@@ -290,13 +293,13 @@ export class ScoringUI {
     const nonStriker = this.app.match.getPlayer(innings.nonStrikerId);
 
     const wicketTypes = [
-      { type: 'BOWLED', label: 'Bowled', icon: '🎯' },
-      { type: 'CAUGHT', label: 'Caught', icon: '🧤' },
-      { type: 'LBW', label: 'LBW', icon: '🦵' },
-      { type: 'RUN_OUT', label: 'Run Out', icon: '🏃' },
-      { type: 'STUMPED', label: 'Stumped', icon: '🏏' },
-      { type: 'HIT_WICKET', label: 'Hit Wicket', icon: '💥' },
-      { type: 'CAUGHT_AND_BOWLED', label: 'C & B', icon: '🎯' }
+      { type: 'BOWLED', label: 'Bowled', icon: '<i data-lucide="crosshair"></i>' },
+      { type: 'CAUGHT', label: 'Caught', icon: '<i data-lucide="hand"></i>' },
+      { type: 'LBW', label: 'LBW', icon: '<i data-lucide="align-end-horizontal"></i>' },
+      { type: 'RUN_OUT', label: 'Run Out', icon: '<i data-lucide="person-standing"></i>' },
+      { type: 'STUMPED', label: 'Stumped', icon: '<i data-lucide="zap"></i>' },
+      { type: 'HIT_WICKET', label: 'Hit Wicket', icon: '<i data-lucide="zap-off"></i>' },
+      { type: 'CAUGHT_AND_BOWLED', label: 'C & B', icon: '<i data-lucide="target"></i>' }
     ];
 
     const needsFielder = ['CAUGHT', 'RUN_OUT', 'STUMPED'].includes(this.wicketType);
@@ -305,7 +308,7 @@ export class ScoringUI {
     return `
       <div class="modal-overlay">
         <div class="modal wicket-modal">
-          <h3>🔴 Wicket</h3>
+          <h3><i data-lucide="alert-circle" style="color:var(--danger);vertical-align:middle;"></i> Wicket</h3>
           
           <div class="wicket-types">
             ${wicketTypes.map(w => `

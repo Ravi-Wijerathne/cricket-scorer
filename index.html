@@ -15,11 +15,14 @@
   <link rel="manifest" href="manifest.json">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
-  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+  <link rel="icon" type="image/svg+xml" href="icons/icon-192x192.svg">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.svg">
   
   <!-- Styles -->
   <link rel="stylesheet" href="style.css">
+  
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <!-- App Container -->
@@ -27,7 +30,7 @@
     <!-- Loading Screen -->
     <div class="loading-screen">
       <div class="loading-content">
-        <div class="loading-icon">🏏</div>
+        <div class="loading-icon"><i data-lucide="activity" style="width: 4rem; height: 4rem;"></i></div>
         <h1>Cricket Scorer</h1>
         <div class="loading-spinner"></div>
         <p>Loading...</p>
@@ -38,7 +41,7 @@
   <!-- Install Prompt (hidden by default) -->
   <div id="installPrompt" class="install-prompt hidden">
     <div class="install-content">
-      <span class="install-icon">📱</span>
+      <span class="install-icon"><i data-lucide="smartphone" style="width: 2rem; height: 2rem;"></i></span>
       <div class="install-text">
         <strong>Install Cricket Scorer</strong>
         <p>Add to home screen for the best experience</p>
@@ -50,10 +53,15 @@
 
   <!-- Offline Indicator -->
   <div id="offlineIndicator" class="offline-indicator hidden">
-    <span>📴 You're offline - Changes will sync when connected</span>
+    <span><i data-lucide="wifi-off" style="vertical-align: middle; margin-right: 8px;"></i> You're offline - Changes will sync when connected</span>
   </div>
 
   <!-- Main App Script -->
   <script type="module" src="app.js"></script>
+
+  <!-- Initialize Icons on load -->
+  <script>
+    lucide.createIcons();
+  </script>
 </body>
 </html>

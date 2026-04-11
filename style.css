@@ -2,34 +2,36 @@
    CSS Variables & Theme
    ======================================== */
 :root {
-  /* Colors */
-  --primary: #4361ee;
-  --primary-dark: #3651d4;
-  --secondary: #7209b7;
-  --success: #06d6a0;
-  --danger: #ef476f;
-  --warning: #ffd166;
-  --info: #118ab2;
+  /* Colors - Light Theme */
+  --primary: #2563eb;       
+  --primary-dark: #1d4ed8;  
+  --secondary: #7c3aed;     
+  --success: #10b981;       
+  --danger: #ef4444;        
+  --warning: #f59e0b;       
+  --info: #0ea5e9;          
   
-  /* Dark Theme */
-  --bg-primary: #1a1a2e;
-  --bg-secondary: #16213e;
-  --bg-tertiary: #0f3460;
-  --bg-card: #1f2940;
+  /* Light Theme Backgrounds */
+  --bg-primary: #f8fafc;    
+  --bg-secondary: #ffffff;  
+  --bg-tertiary: #f1f5f9;   
+  --bg-card: #ffffff;       
   
-  --text-primary: #ffffff;
-  --text-secondary: #a0aec0;
-  --text-muted: #718096;
+  /* Light Theme Text */
+  --text-primary: #0f172a;  
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;    
   
-  --border-color: #2d3748;
-  --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  /* Light Theme Borders and Shadows */
+  --border-color: #e2e8f0;  
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   
-  /* Cricket specific */
-  --striker-color: #ffd166;
-  --boundary-4: #06d6a0;
-  --boundary-6: #7209b7;
-  --wicket-color: #ef476f;
-  --extra-color: #f4a261;
+  /* Cricket specific - Optimized for Light */
+  --striker-color: #d97706;  
+  --boundary-4: #059669;     
+  --boundary-6: #6d28d9;     
+  --wicket-color: #dc2626;   
+  --extra-color: #ea580c;
   
   /* Spacing */
   --spacing-xs: 0.25rem;

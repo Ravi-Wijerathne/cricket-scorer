@@ -34,6 +34,9 @@ export class ScorecardUI {
     `;
 
     this.attachEventListeners();
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
   }
 
   /**
@@ -45,14 +48,14 @@ export class ScorecardUI {
     return `
       <header class="scorecard-header">
         <div class="header-left">
-          <button class="btn-home" id="homeBtn" title="Go to Home">🏠</button>
-          <button class="btn-back" id="backBtn">← Back</button>
+          <button class="btn-home" id="homeBtn" title="Go to Home"><i data-lucide="home"></i></button>
+          <button class="btn-back" id="backBtn"><i data-lucide="arrow-left" style="width:1rem;height:1rem;margin-right:4px;vertical-align:middle;"></i> Back</button>
         </div>
         <div class="match-title">
           <h1>${match.matchName || 'Match Scorecard'}</h1>
           <p class="venue">${match.venue} • ${match.date}</p>
         </div>
-        <button class="btn-share" id="shareBtn">📤</button>
+        <button class="btn-share" id="shareBtn"><i data-lucide="share-2"></i></button>
       </header>
     `;
   }

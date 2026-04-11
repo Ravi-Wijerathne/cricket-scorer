@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cricket-scorer-v2';
+const CACHE_NAME = 'cricket-scorer-v4';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -18,7 +18,9 @@ const STATIC_ASSETS = [
   '/services/UndoService.js',
   '/ui/MatchSetup.js',
   '/ui/ScoringUI.js',
-  '/ui/ScorecardUI.js'
+  '/ui/ScorecardUI.js',
+  '/icons/icon-192x192.svg',
+  '/icons/icon-512x512.svg'
 ];
 
 // Install event - cache static assets

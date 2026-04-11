@@ -188,11 +188,19 @@ def check_port(port):
 
 
 # ─── Server ─────────────────────────────────────────────────────────────────
+class QuietServer(http.server.ThreadingHTTPServer):
+    def handle_error(self, request, client_address):
+        # Suppress harmless connection drop errors (e.g., when browser cancels request)
+        err_type = sys.exc_info()[0]
+        if err_type and issubclass(err_type, (ConnectionAbortedError, BrokenPipeError, ConnectionResetError)):
+            return
+        super().handle_error(request, client_address)
+
 def start_server(project_root, port):
     """Start a simple HTTP server serving the project directory."""
     os.chdir(project_root)
     handler = http.server.SimpleHTTPRequestHandler
-    httpd = http.server.HTTPServer((HOST, port), handler)
+    httpd = QuietServer((HOST, port), handler)
     info(f"Serving on {APP_URL}")
     httpd.serve_forever()
 

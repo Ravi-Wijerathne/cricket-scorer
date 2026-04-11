@@ -24,8 +24,8 @@ export class MatchSetup {
       <div class="setup-wizard">
         <header class="setup-header">
           <div class="setup-header-top">
-            <button class="btn-home" id="homeBtn" title="Go to Home">🏠</button>
-            <h1>🏏 Cricket Scorer</h1>
+            <button class="btn-home" id="homeBtn" title="Go to Home"><i data-lucide="home" style="width: 1.2rem; height: 1.2rem;"></i></button>
+            <h1><i data-lucide="activity" style="vertical-align: middle;"></i> Cricket Scorer</h1>
           </div>
           <div class="step-indicator">
             ${this.renderStepIndicator()}
@@ -43,6 +43,10 @@ export class MatchSetup {
     `;
 
     this.attachEventListeners();
+    
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
   }
 
   /**
@@ -286,13 +290,13 @@ export class MatchSetup {
             <label class="decision-option ${toss.decision === 'BAT' ? 'selected' : ''}">
               <input type="radio" name="tossDecision" value="BAT" 
                      ${toss.decision === 'BAT' ? 'checked' : ''}>
-              <span class="decision-icon">🏏</span>
+              <span class="decision-icon"><i data-lucide="activity"></i></span>
               <span class="decision-label">Bat First</span>
             </label>
             <label class="decision-option ${toss.decision === 'BOWL' ? 'selected' : ''}">
               <input type="radio" name="tossDecision" value="BOWL" 
                      ${toss.decision === 'BOWL' ? 'checked' : ''}>
-              <span class="decision-icon">⚾</span>
+              <span class="decision-icon"><i data-lucide="circle"></i></span>
               <span class="decision-label">Bowl First</span>
             </label>
           </div>
@@ -344,17 +348,17 @@ export class MatchSetup {
       <div class="nav-buttons">
         ${this.currentStep > 1 ? `
           <button type="button" class="btn btn-secondary" id="prevBtn">
-            ← Previous
+            <i data-lucide="arrow-left" style="width: 1rem; height: 1rem; margin-right: 4px;"></i> Previous
           </button>
         ` : '<div></div>'}
         
         ${this.currentStep < this.totalSteps ? `
           <button type="button" class="btn btn-primary" id="nextBtn">
-            Next →
+            Next <i data-lucide="arrow-right" style="width: 1rem; height: 1rem; margin-left: 4px;"></i>
           </button>
         ` : `
           <button type="button" class="btn btn-success" id="startMatchBtn">
-            🏏 Start Match
+            <i data-lucide="play" style="width: 1rem; height: 1rem; margin-right: 4px;"></i> Start Match
           </button>
         `}
       </div>

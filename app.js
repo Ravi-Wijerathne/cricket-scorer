@@ -243,19 +243,19 @@ class CricketScorerApp {
     container.innerHTML = `
       <div class="home-screen">
         <header class="home-header">
-          <h1>🏏 Cricket Scorer</h1>
+          <h1><i data-lucide="activity" style="vertical-align: middle;"></i> Cricket Scorer</h1>
           <p>Professional ball-by-ball scoring</p>
         </header>
         
         <main class="home-content">
           <div class="home-actions">
             <button class="btn btn-primary btn-large" id="newMatchBtn">
-              ➕ New Match
+              <i data-lucide="plus"></i> New Match
             </button>
             
             ${this.match && !this.match.isComplete() ? `
               <button class="btn btn-success btn-large" id="continueMatchBtn">
-                ▶️ Continue Match
+                <i data-lucide="play"></i> Continue Match
               </button>
             ` : ''}
           </div>
@@ -269,7 +269,7 @@ class CricketScorerApp {
         </main>
         
         <footer class="home-footer">
-          <p>Version 1.0.0 • Made with ❤️</p>
+          <p>Version 1.0.0 • Made with <i data-lucide="heart" style="width: 1em; height: 1em; vertical-align: text-bottom; color: var(--danger);"></i></p>
         </footer>
       </div>
     `;
@@ -288,6 +288,10 @@ class CricketScorerApp {
 
     // Add home screen styles if not present
     this.addHomeStyles();
+    
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
   }
 
   /**
@@ -323,7 +327,7 @@ class CricketScorerApp {
               <span>${match.teams?.[1]?.shortName || 'Team B'}: ${match.innings[1].totalRuns}/${match.innings[1].wicketsFallen}</span>
             ` : ''}
           </div>
-          <button class="btn-delete-match" title="Delete match">🗑️</button>
+          <button class="btn-delete-match" title="Delete match"><i data-lucide="trash-2" style="width: 1.2rem; height: 1.2rem;"></i></button>
         </div>
       `).join('');
 
@@ -340,6 +344,10 @@ class CricketScorerApp {
           this.deleteMatch(card.dataset.matchId);
         });
       });
+      
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
     } catch (error) {
       console.error('Failed to load recent matches:', error);
       container.innerHTML = '<p class="error">Failed to load matches</p>';
