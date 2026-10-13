@@ -52,6 +52,118 @@ class CricketScorerApp {
     
     // PWA install prompt
     this.deferredPrompt = null;
+
+    // Theme initialization
+    this.theme = this.getStoredTheme();
+    this.applyTheme(this.theme);
+    this.setupThemeListener();
+  }
+
+  /**
+   * Get initial theme preference
+   */
+  getStoredTheme() {
+    const saved = localStorage.getItem('cricket_scorer_theme');
+    if (saved === 'dark' || saved === 'light') {
+      return saved;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  }
+
+  /**
+   * Apply theme to DOM and update meta theme-color
+   */
+  applyTheme(theme) {
+    this.theme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme);
+    
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', theme === 'dark' ? '#0b1120' : '#2563eb');
+    }
+
+    this.updateThemeButtons();
+  }
+
+  /**
+   * Toggle between light and dark theme
+   */
+  toggleTheme() {
+    const newTheme = this.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('cricket_scorer_theme', newTheme);
+    this.applyTheme(newTheme);
+  }
+
+  /**
+   * Get icon name for theme button
+   */
+  getThemeIcon() {
+    return this.theme === 'dark' ? 'sun' : 'moon';
+  }
+
+  /**
+   * Get theme toggle title / tooltip
+   */
+  getThemeToggleTitle() {
+    return this.theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+  }
+
+  /**
+   * Render theme toggle button HTML
+   */
+  renderThemeToggle(className = '') {
+    return `
+      <button class="btn-theme-toggle ${className}" id="themeToggleBtn" 
+              title="${this.getThemeToggleTitle()}" 
+              aria-label="${this.getThemeToggleTitle()}">
+        <i data-lucide="${this.getThemeIcon()}"></i>
+      </button>
+    `;
+  }
+
+  /**
+   * Setup listeners for theme toggle buttons in current DOM
+   */
+  setupThemeToggleListeners() {
+    const buttons = document.querySelectorAll('.btn-theme-toggle, #themeToggleBtn');
+    buttons.forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        this.toggleTheme();
+      };
+    });
+  }
+
+  /**
+   * Update all theme buttons in the DOM after a toggle
+   */
+  updateThemeButtons() {
+    const buttons = document.querySelectorAll('.btn-theme-toggle, #themeToggleBtn');
+    buttons.forEach(btn => {
+      btn.title = this.getThemeToggleTitle();
+      btn.setAttribute('aria-label', this.getThemeToggleTitle());
+      btn.innerHTML = `<i data-lucide="${this.getThemeIcon()}"></i>`;
+    });
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  }
+
+  /**
+   * Listen for system theme changes
+   */
+  setupThemeListener() {
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('cricket_scorer_theme')) {
+          this.applyTheme(e.matches ? 'dark' : 'light');
+        }
+      });
+    }
   }
 
   /**
@@ -213,6 +325,7 @@ class CricketScorerApp {
    * Main render function
    */
   render() {
+    window.scrollTo(0, 0);
     switch (this.currentScreen) {
       case 'home':
         this.renderHome();
@@ -243,6 +356,9 @@ class CricketScorerApp {
     container.innerHTML = `
       <div class="home-screen">
         <header class="home-header">
+          <div class="home-header-toggle">
+            ${this.renderThemeToggle()}
+          </div>
           <h1><i data-lucide="activity" style="vertical-align: middle;"></i> Cricket Scorer</h1>
           <p>Professional ball-by-ball scoring</p>
         </header>
@@ -282,6 +398,9 @@ class CricketScorerApp {
     document.getElementById('continueMatchBtn')?.addEventListener('click', () => {
       this.showScoring();
     });
+
+    // Theme toggle listeners
+    this.setupThemeToggleListeners();
 
     // Load recent matches
     this.loadRecentMatches();
@@ -419,9 +538,17 @@ class CricketScorerApp {
       }
       
       .home-header {
+        position: relative;
         padding: var(--spacing-xl);
         text-align: center;
         background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .home-header-toggle {
+        position: absolute;
+        top: var(--spacing-md);
+        right: var(--spacing-md);
       }
       
       .home-header h1 {
@@ -466,9 +593,11 @@ class CricketScorerApp {
         position: relative;
         padding: var(--spacing-md);
         background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow);
         border-radius: var(--radius-md);
         cursor: pointer;
-        transition: background 0.2s;
+        transition: background 0.2s, border-color 0.2s;
       }
       
       .match-card:hover {
@@ -484,6 +613,7 @@ class CricketScorerApp {
       
       .match-name {
         font-weight: 600;
+        color: var(--text-primary);
       }
       
       .match-status {
@@ -491,21 +621,22 @@ class CricketScorerApp {
         padding: 2px 6px;
         border-radius: var(--radius-sm);
         text-transform: uppercase;
+        font-weight: 600;
       }
       
       .match-status.in_progress {
         background: var(--success);
-        color: var(--bg-primary);
+        color: #ffffff;
       }
       
       .match-status.completed {
         background: var(--info);
-        color: white;
+        color: #ffffff;
       }
       
       .match-status.not_started {
         background: var(--warning);
-        color: var(--bg-primary);
+        color: #0f172a;
       }
       
       .match-card-body {
@@ -527,8 +658,9 @@ class CricketScorerApp {
         position: absolute;
         bottom: var(--spacing-md);
         right: var(--spacing-md);
-        background: var(--bg-primary);
+        background: var(--bg-tertiary);
         border: 1px solid var(--border-color);
+        color: var(--text-secondary);
         border-radius: var(--radius-sm);
         cursor: pointer;
         font-size: 1rem;
@@ -545,6 +677,7 @@ class CricketScorerApp {
         transform: scale(1.1);
         background: var(--danger);
         border-color: var(--danger);
+        color: #ffffff;
       }
       
       .home-footer {
@@ -569,8 +702,16 @@ class CricketScorerApp {
     container.innerHTML = `
       <div class="innings-setup">
         <header class="setup-header">
-          <h1>Start Innings ${innings.inningsNumber}</h1>
-          <p>${battingTeam?.name} batting</p>
+          <div class="setup-header-top">
+            <button class="btn-home" id="homeBtn" title="Go to Home"><i data-lucide="home" style="width: 1.2rem; height: 1.2rem;"></i></button>
+            <div class="setup-header-title">
+              <div>
+                <h1>Start Innings ${innings.inningsNumber}</h1>
+                <p style="color: var(--text-secondary); font-size: 0.85rem;">${battingTeam?.name} batting</p>
+              </div>
+            </div>
+            ${this.renderThemeToggle()}
+          </div>
         </header>
         
         <main class="setup-content">
@@ -613,9 +754,16 @@ class CricketScorerApp {
     this.addInningsSetupStyles();
 
     // Attach event listeners
+    document.getElementById('homeBtn')?.addEventListener('click', () => {
+      this.showHome();
+    });
+
     document.getElementById('startInningsBtn')?.addEventListener('click', () => {
       this.startInnings();
     });
+
+    // Theme toggle listeners
+    this.setupThemeToggleListeners();
 
     // Limit batsmen selection to 2
     const checkboxes = document.querySelectorAll('input[name="batsman"]');
@@ -627,6 +775,10 @@ class CricketScorerApp {
         }
       });
     });
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
   }
 
   /**
@@ -665,13 +817,14 @@ class CricketScorerApp {
         gap: var(--spacing-sm);
         padding: var(--spacing-sm) var(--spacing-md);
         background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
         border-radius: var(--radius-md);
         cursor: pointer;
-        transition: background 0.2s;
+        transition: background 0.2s, border-color 0.2s;
       }
       
       .player-select-option:has(input:checked) {
-        background: var(--bg-tertiary);
+        background: rgba(59, 130, 246, 0.15);
         border: 1px solid var(--primary);
       }
       

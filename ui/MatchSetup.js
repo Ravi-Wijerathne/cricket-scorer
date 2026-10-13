@@ -25,7 +25,10 @@ export class MatchSetup {
         <header class="setup-header">
           <div class="setup-header-top">
             <button class="btn-home" id="homeBtn" title="Go to Home"><i data-lucide="home" style="width: 1.2rem; height: 1.2rem;"></i></button>
-            <h1><i data-lucide="activity" style="vertical-align: middle;"></i> Cricket Scorer</h1>
+            <div class="setup-header-title">
+              <h1><i data-lucide="activity" style="vertical-align: middle;"></i> Cricket Scorer</h1>
+            </div>
+            ${this.app.renderThemeToggle()}
           </div>
           <div class="step-indicator">
             ${this.renderStepIndicator()}
@@ -380,6 +383,9 @@ export class MatchSetup {
         }
       });
     }
+
+    // Theme toggle listeners
+    this.app.setupThemeToggleListeners();
     
     // Navigation
     const nextBtn = document.getElementById('nextBtn');
