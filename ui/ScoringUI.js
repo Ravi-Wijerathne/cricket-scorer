@@ -71,12 +71,14 @@ export class ScoringUI {
           </div>
         </div>
         <div class="header-actions">
+          ${this.app.renderThemeToggle()}
           <button class="btn-icon" id="undoBtn" title="Undo"><i data-lucide="undo-2"></i></button>
           <div class="menu-container">
             <button class="btn-icon" id="menuBtn" title="Menu"><i data-lucide="menu"></i></button>
             ${this.showingMenu ? `
               <div class="dropdown-menu">
                 <button class="dropdown-item" id="menuScorecard"><i data-lucide="bar-chart-2" style="width:1rem;height:1rem;margin-right:8px;vertical-align:middle;"></i> View Scorecard</button>
+                <button class="dropdown-item" id="menuToggleTheme"><i data-lucide="${this.app.getThemeIcon()}" style="width:1rem;height:1rem;margin-right:8px;vertical-align:middle;"></i> ${this.app.theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</button>
                 <button class="dropdown-item" id="menuSwapStrike"><i data-lucide="refresh-cw" style="width:1rem;height:1rem;margin-right:8px;vertical-align:middle;"></i> Swap Strike</button>
                 <button class="dropdown-item" id="menuChangeBowler"><i data-lucide="user-switch" style="width:1rem;height:1rem;margin-right:8px;vertical-align:middle;"></i> Change Bowler</button>
                 <button class="dropdown-item" id="menuEndInnings"><i data-lucide="flag" style="width:1rem;height:1rem;margin-right:8px;vertical-align:middle;"></i> End Innings</button>
@@ -372,6 +374,9 @@ export class ScoringUI {
    * Attach event listeners
    */
   attachEventListeners() {
+    // Theme toggle listeners
+    this.app.setupThemeToggleListeners();
+
     // Home button
     const homeBtn = document.getElementById('homeBtn');
     if (homeBtn) {
@@ -474,6 +479,15 @@ export class ScoringUI {
       menuScorecard.addEventListener('click', () => {
         this.showingMenu = false;
         this.app.showScorecard();
+      });
+    }
+
+    const menuToggleTheme = document.getElementById('menuToggleTheme');
+    if (menuToggleTheme) {
+      menuToggleTheme.addEventListener('click', () => {
+        this.showingMenu = false;
+        this.app.toggleTheme();
+        this.render();
       });
     }
 

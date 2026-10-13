@@ -14,6 +14,7 @@ export class ScorecardUI {
    * Render the scorecard
    */
   render() {
+    window.scrollTo(0, 0);
     const container = document.getElementById('app');
     const match = this.app.match;
 
@@ -55,7 +56,10 @@ export class ScorecardUI {
           <h1>${match.matchName || 'Match Scorecard'}</h1>
           <p class="venue">${match.venue} • ${match.date}</p>
         </div>
-        <button class="btn-share" id="shareBtn"><i data-lucide="share-2"></i></button>
+        <div class="header-right">
+          ${this.app.renderThemeToggle()}
+          <button class="btn-share" id="shareBtn" title="Share Scorecard"><i data-lucide="share-2"></i></button>
+        </div>
       </header>
     `;
   }
@@ -378,6 +382,9 @@ export class ScorecardUI {
    * Attach event listeners
    */
   attachEventListeners() {
+    // Theme toggle listeners
+    this.app.setupThemeToggleListeners();
+
     // Home button
     const homeBtn = document.getElementById('homeBtn');
     if (homeBtn) {
